@@ -147,11 +147,33 @@ h2{font-size:clamp(32px,9vw,54px);line-height:.98;letter-spacing:-.045em;margin:
 <script>
 function copiarPix(){
   const key = document.getElementById('pixKey').textContent.trim();
-  if(key === 'd1fc28e5-6473-4e24-9e4a-766706360095'){
-    alert('Adicione a chave PIX do Matheus antes de publicar.');
-    return;
+
+  function ok(){ alert('Chave PIX copiada!'); }
+
+  function fallbackCopy(text){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    ta.style.pointerEvents = 'none';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+      ok();
+    } catch (e) {
+      alert('Não foi possível copiar automaticamente. Copie manualmente a chave PIX exibida na tela.');
+    }
+    document.body.removeChild(ta);
   }
-  navigator.clipboard.writeText(key).then(()=>alert('Chave PIX copiada!'));
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(key).then(ok).catch(() => fallbackCopy(key));
+  } else {
+    fallbackCopy(key);
+  }
 }
 </script>
 </body>
