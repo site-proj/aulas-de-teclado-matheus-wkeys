@@ -177,13 +177,20 @@ function copiarPix(){
     document.body.appendChild(ta);
     ta.focus();
     ta.select();
+    let copied = false;
     try {
-      document.execCommand('copy');
+      copied = document.execCommand('copy');
+    } catch {
+      // O navegador pode bloquear a cópia pelo método alternativo.
+    } finally {
+      document.body.removeChild(ta);
+    }
+
+    if (copied) {
       ok();
-    } catch (e) {
+    } else {
       alert('Não foi possível copiar automaticamente. Copie manualmente a chave PIX exibida na tela.');
     }
-    document.body.removeChild(ta);
   }
 
   if (navigator.clipboard && window.isSecureContext) {
